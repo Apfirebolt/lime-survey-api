@@ -12,50 +12,30 @@ class UserSchema(BaseModel):
         orm_mode = True
 
 
-class ProjectSchema(BaseModel):
-    id: int
-    title: str
-
-    class Config:
-        orm_mode = True
-
-
-
-class TaskBase(BaseModel):
+class SurveyBase(BaseModel):
     id: Optional[int]
     title: str
     description: str
-    status: str
-    project_id: int
-    project: Optional[ProjectSchema]
-    dueDate: date
+    user_id: int
 
     class Config:
         orm_mode = True
 
 
-class TaskUpdate(BaseModel):
+class SurveyUpdate(BaseModel):
     title: Optional[str]
     description: Optional[str]
-    status: Optional[str]
-    project_id: Optional[int]
-    dueDate: Optional[date]
 
     class Config:
         orm_mode = True
 
 
-class TaskList(BaseModel):
+class SurveyList(BaseModel):
     id: int
     title: str
     description: str
-    status: str
     owner_id: int
-    project_id: int
-    project: ProjectSchema
-    owner: UserSchema
     createdDate: date
-    dueDate: date
 
     class Config:
         orm_mode = True

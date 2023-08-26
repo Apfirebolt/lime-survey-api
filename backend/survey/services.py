@@ -4,51 +4,48 @@ from . import models
 from datetime import datetime
 
 
-async def create_new_task(request, database, current_user) -> models.Task:
-    new_task = models.Task(title=request.title, description=request.description, status=request.status, project_id=request.project_id,
-                                    owner_id=current_user.id, createdDate=datetime.now(), dueDate=request.dueDate)
-    database.add(new_task)
+async def create_new_survey(request, database, current_user) -> models.Survey:
+    new_survey = models.survey(title=request.title, description=request.description,
+                                    user_id=current_user.id, createdDate=datetime.now())
+    database.add(new_survey)
     database.commit()
-    database.refresh(new_task)
-    return new_task
+    database.refresh(new_survey)
+    return new_survey
 
 
-async def get_task_listing(database, current_user) -> List[models.Task]:
-    tasks = database.query(models.Task).filter(models.Task.owner_id == current_user).all()
-    return tasks
+async def get_survey_listing(database, current_user) -> List[models.Survey]:
+    surveys = database.query(models.Survey).all()
+    return surveys
 
 
-async def get_task_by_id(task_id, current_user, database):
-    task = database.query(models.Task).filter_by(id=task_id, owner_id=current_user).first()
-    if not task:
+async def get_survey_by_id(survey_id, current_user, database):
+    survey = database.query(models.Survey).filter_by(id=survey_id).first()
+    if not survey:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="task Not Found !"
+            detail="survey Not Found !"
         )
-    return task
+    return survey
 
 
-async def delete_task_by_id(task_id, database):
-    database.query(models.Task).filter(
-        models.Task.id == task_id).delete()
+async def delete_survey_by_id(survey_id, database):
+    database.query(models.survey).filter(
+        models.Survey.id == survey_id).delete()
     database.commit()
 
 
-async def update_task_by_id(request, task_id, current_user, database):
-    task = database.query(models.Task).filter_by(id=task_id, owner_id=current_user).first()
-    if not task:
+async def update_survey_by_id(request, survey_id, current_user, database):
+    survey = database.query(models.Survey).filter_by(id=survey_id, owner_id=current_user).first()
+    if not survey:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="task Not Found !"
+            detail="survey Not Found !"
         )
-    task.title = request.title if request.title else task.title
-    task.description = request.description if request.description else task.description
-    task.status = request.status if request.status else task.status
-    task.project_id = request.project_id if request.project_id else task.project_id
-    task.dueDate = request.dueDate if request.dueDate else task.dueDate
+    survey.title = request.title if request.title else survey.title
+    survey.description = request.description if request.description else survey.description
     database.commit()
-    database.refresh(task)
-    return task
+    database.refresh(survey)
+    return survey
 
 
 
