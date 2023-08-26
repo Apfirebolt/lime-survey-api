@@ -16,7 +16,6 @@ class SurveyBase(BaseModel):
     id: Optional[int]
     title: str
     description: str
-    user_id: int
 
     class Config:
         orm_mode = True
@@ -34,7 +33,7 @@ class SurveyList(BaseModel):
     id: int
     title: str
     description: str
-    owner_id: int
+    user_id: int
     createdDate: date
 
     class Config:

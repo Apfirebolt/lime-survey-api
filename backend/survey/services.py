@@ -5,7 +5,7 @@ from datetime import datetime
 
 
 async def create_new_survey(request, database, current_user) -> models.Survey:
-    new_survey = models.survey(title=request.title, description=request.description,
+    new_survey = models.Survey(title=request.title, description=request.description,
                                     user_id=current_user.id, createdDate=datetime.now())
     database.add(new_survey)
     database.commit()
@@ -29,13 +29,13 @@ async def get_survey_by_id(survey_id, current_user, database):
 
 
 async def delete_survey_by_id(survey_id, database):
-    database.query(models.survey).filter(
+    database.query(models.Survey).filter(
         models.Survey.id == survey_id).delete()
     database.commit()
 
 
 async def update_survey_by_id(request, survey_id, current_user, database):
-    survey = database.query(models.Survey).filter_by(id=survey_id, owner_id=current_user).first()
+    survey = database.query(models.Survey).filter_by(id=survey_id, user_id=current_user).first()
     if not survey:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
