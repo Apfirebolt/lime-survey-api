@@ -39,7 +39,7 @@ const Login = () => {
       className="sm:w-3/4 mx-auto my-3"
     >
       <p className="text-center font-bold text-2xl my-8 text-gray-700">LOGIN</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="flex justify-center">
           <img src={SurveyLogo} alt="logo" className="w-1/2" />
         </div>

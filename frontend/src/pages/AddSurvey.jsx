@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { register as registerFunc, reset } from "../features/auth/authSlice";
+import { toast } from 'react-toastify';
+import { createSurvey, resetVariables } from "../features/survey/surveySlice";
 import SurveyLogo from "../assets/survey-goals.jpg";
+
 
 const AddSurvey = () => {
   const {
@@ -12,12 +14,32 @@ const AddSurvey = () => {
     formState: { errors },
   } = useForm();
 
-  const { user, isLoading, isError, isSuccess, message } = useSelector(
-    (state) => state.auth
+  const { isError, isSuccess, message } = useSelector(
+    (state) => state.survey
   );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [toastMessage, setToastMessage] = useState('')
+
+  useEffect(() => {
+
+    if (isError) {
+      toast.error(message)
+      dispatch(resetVariables())
+    }
+
+    if (isSuccess && toastMessage) {
+      toast.success(toastMessage)
+      dispatch(resetVariables())
+      navigate('/survey')
+    }
+  }, [dispatch, isError, isSuccess, message, navigate, toastMessage])
+
+  const createSurveyUtil = (data) => {
+    dispatch(createSurvey(data))
+    setToastMessage('Survey created successfully!')
+  }
 
   return (
     <div className="bg-gray-50">
@@ -28,7 +50,7 @@ const AddSurvey = () => {
           </h1>
 
           <form
-            onSubmit={handleSubmit((data) => dispatch(registerFunc(data)))}
+            onSubmit={handleSubmit((data) => createSurveyUtil(data))}
             className="my-8"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">

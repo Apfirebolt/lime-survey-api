@@ -10,15 +10,15 @@ const Home = () => {
       <div className="mx-auto max-w-screen-xl px-4 py-16 lg:flex lg:items-center">
         <div className="mx-auto max-w-xl text-center">
           <h1 className="text-3xl font-extrabold sm:text-5xl">
-            Kanban Board.
-            <strong className="font-extrabold text-red-700 sm:block">
-              React and FAST API.
+            Public opinion matters.
+            <strong className="font-extrabold text-green-500 sm:block">
+              Lime Survey.
             </strong>
           </h1>
 
           {profile && (
             <h1 className="text-xl my-4 font-extrabold sm:text-2xl">
-              Welcome to Kanban Board,
+              Welcome to The Lime Survey,
               <strong className="font-extrabold text-blue-700 sm:block">
                 {profile.username}
               </strong>
@@ -26,8 +26,7 @@ const Home = () => {
           )}
 
           <p className="mt-4 sm:text-xl sm:leading-relaxed">
-            A simple Jira clone - create tasks and arrange them through drag and
-            drop
+            A survey portal to manage surveys and get public opinion which matters.
           </p>
         </div>
       </div>
