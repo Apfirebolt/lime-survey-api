@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import AddQuestion from "../components/AddQuestion";
+import AddOption from "../components/AddOption";
 import SurveyLogo from "../assets/survey-goals.jpg";
 
 import {
@@ -14,13 +15,16 @@ import {
 } from "../features/survey/surveySlice";
 
 import { createQuestion } from "../features/question/questionSlice";
+import { createOption } from "../features/option/optionSlice";
 
 const SurveyDetail = () => {
   const dispatch = useDispatch();
   const params = useParams();
   const navigate = useNavigate();
   const [toastMessage, setToastMessage] = useState("");
+  const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [isQuestionModalOpen, setIsQuestionModalOpened] = useState(false);
+  const [isOptionModalOpen, setIsOptionModalOpened] = useState(false);
 
   const closeQuestionModal = () => {
     setIsQuestionModalOpened(false);
@@ -29,6 +33,20 @@ const SurveyDetail = () => {
   const openQuestionModal = () => {
     setIsQuestionModalOpened(true);
   };
+
+  const closeOptionModal = () => {
+    setIsOptionModalOpened(false);
+  };
+
+  const openOptionModal = () => {
+    setIsOptionModalOpened(true);
+  };
+
+  const optionAddUtil = (data) => {
+    setSelectedQuestion(data)
+    openOptionModal()
+  }
+
 
   useEffect(() => {
     dispatch(getSurvey(params.id));
@@ -95,6 +113,11 @@ const SurveyDetail = () => {
   const addQuestionUtil = (data) => {
     setToastMessage("Question successfully added!");
     dispatch(createQuestion({ ...data, survey_id: survey.id }));
+  };
+
+  const addOptionUtil = (data) => {
+    setToastMessage("Option successfully added!");
+    dispatch(createOption({ ...data, question_id: selectedQuestion.id }));
   };
 
   return (
@@ -165,7 +188,7 @@ const SurveyDetail = () => {
               <button
                 type="button"
                 onClick={() => openQuestionModal()}
-                className="shadow mx-3 bg-gray-500 hover:bg-gray-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                className="shadow bg-gray-500 hover:bg-gray-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
               >
                 Add Question
               </button>
@@ -178,6 +201,14 @@ const SurveyDetail = () => {
           closeModal={closeQuestionModal}
           addQuestionUtil={addQuestionUtil}
         />
+
+        <AddOption
+          isOpen={isOptionModalOpen}
+          openModal={openOptionModal}
+          closeModal={closeOptionModal}
+          addOptionUtil={addOptionUtil}
+          selectedQuestion={selectedQuestion}
+        />
       </form>
       {survey.questions && survey.questions.length > 0 && (
         <div className="sm:w-3/4 mx-auto my-5">
@@ -189,14 +220,39 @@ const SurveyDetail = () => {
       {survey.questions &&
         survey.questions.map((question) => (
           <div
-            className="flex justify-around items-center my-1"
+            className="flex w-3/4 mx-auto justify-around items-center my-1"
             key={question.id}
           >
-            <p className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
+            <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
+              <p>
               {question.questionText}
-            </p>
+              </p>
+
+              <p className="my-3 text-gray-500 font-medium text-lg">{question.options.length > 0 ? 'Options': ''}</p>
+              {question.options && question.options.map((option) => (
+              <p>
+                {option.optionText}
+              </p>
+            ))}
+            </div>
 
             <div className="flex justify-start">
+              <svg
+                onClick={() => optionAddUtil(question)}
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
