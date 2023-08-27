@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
 import AddQuestion from "../components/AddQuestion";
 import AddOption from "../components/AddOption";
+import ConfirmModal from "../components/ConfirmModal";
 import SurveyLogo from "../assets/survey-goals.jpg";
 
 import {
@@ -14,7 +15,7 @@ import {
   resetVariables,
 } from "../features/survey/surveySlice";
 
-import { createQuestion } from "../features/question/questionSlice";
+import { createQuestion, deleteQuestion } from "../features/question/questionSlice";
 import { createOption } from "../features/option/optionSlice";
 
 const SurveyDetail = () => {
@@ -25,6 +26,16 @@ const SurveyDetail = () => {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
   const [isQuestionModalOpen, setIsQuestionModalOpened] = useState(false);
   const [isOptionModalOpen, setIsOptionModalOpened] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmMessage, setConfirmMessage] = useState("");
+
+  const closeModal = () => {
+    setIsConfirmModalOpen(false);
+  };
+
+  const openModal = () => {
+    setIsConfirmModalOpen(true);
+  };
 
   const closeQuestionModal = () => {
     setIsQuestionModalOpened(false);
@@ -43,10 +54,9 @@ const SurveyDetail = () => {
   };
 
   const optionAddUtil = (data) => {
-    setSelectedQuestion(data)
-    openOptionModal()
-  }
-
+    setSelectedQuestion(data);
+    openOptionModal();
+  };
 
   useEffect(() => {
     dispatch(getSurvey(params.id));
@@ -104,6 +114,11 @@ const SurveyDetail = () => {
     dispatch(deleteSurvey(params.id));
   };
 
+  const deleteQuestionUtil = () => {
+    setToastMessage("Question successfully deleted!");
+    dispatch(deleteQuestion(selectedQuestion.id));
+  };
+
   const updateSurveyUtil = (data) => {
     setToastMessage("Survey successfully updated!");
     data.id = survey.id;
@@ -118,6 +133,12 @@ const SurveyDetail = () => {
   const addOptionUtil = (data) => {
     setToastMessage("Option successfully added!");
     dispatch(createOption({ ...data, question_id: selectedQuestion.id }));
+  };
+
+  const confirmQuestionDeleteUtil = (data) => {
+    setSelectedQuestion(data);
+    setConfirmMessage(`Are you sure you want to delete this question - ${data.questionText}?`);
+    openModal();
   };
 
   return (
@@ -209,6 +230,14 @@ const SurveyDetail = () => {
           addOptionUtil={addOptionUtil}
           selectedQuestion={selectedQuestion}
         />
+
+        <ConfirmModal
+          isOpen={isConfirmModalOpen}
+          openModal={openModal}
+          closeModal={closeModal}
+          confirmAction={deleteQuestionUtil}
+          message={confirmMessage}
+        />
       </form>
       {survey.questions && survey.questions.length > 0 && (
         <div className="sm:w-3/4 mx-auto my-5">
@@ -224,16 +253,13 @@ const SurveyDetail = () => {
             key={question.id}
           >
             <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
-              <p>
-              {question.questionText}
-              </p>
+              <p>{question.questionText}</p>
 
-              <p className="my-3 text-gray-500 font-medium text-lg">{question.options.length > 0 ? 'Options': ''}</p>
-              {question.options && question.options.map((option) => (
-              <p>
-                {option.optionText}
+              <p className="my-3 text-gray-500 font-medium text-lg">
+                {question.options.length > 0 ? "Options" : ""}
               </p>
-            ))}
+              {question.options &&
+                question.options.map((option) => <p key={option.id}>{option.optionText}</p>)}
             </div>
 
             <div className="flex justify-start">
@@ -254,6 +280,7 @@ const SurveyDetail = () => {
               </svg>
 
               <svg
+                onClick={() => confirmQuestionDeleteUtil(question)}
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
