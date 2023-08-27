@@ -46,7 +46,7 @@ const Header = () => {
     <header className="relative z-10">
       <nav aria-label="Top">
         {/* Top navigation */}
-        <div className="bg-gray-900">
+        <div className="bg-blue-800 py-3">
           <div className="max-w-7xl mx-auto h-10 px-4 flex items-center justify-between sm:px-6 lg:px-8">
             {user ? (
               <div className="flex items-center space-x-6">
@@ -58,25 +58,17 @@ const Header = () => {
                   Log Out
                 </button>
                 <Link
-                  to="task"
+                  to="survey/add"
                   className="text-sm font-medium text-white hover:text-gray-100"
                 >
-                  Add Task
+                  Add Survey
                 </Link>
                 <Link
-                  to="project"
+                  to="survey"
                   className="text-sm font-medium text-white hover:text-gray-100"
                 >
-                  Add Project
+                  Surveys
                 </Link>
-                <Link
-                  to="projects"
-                  className="text-sm font-medium text-white hover:text-gray-100"
-                >
-                  All Projects
-                </Link>
-                
-                
                 <Link
                   to="/"
                   className="text-sm font-medium text-white hover:text-gray-100"
