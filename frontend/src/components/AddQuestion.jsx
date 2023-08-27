@@ -1,8 +1,20 @@
-import { Dialog, Transition } from '@headlessui/react'
-import { Fragment } from 'react'
+import React from "react";
+import { useForm } from "react-hook-form";
+import { Dialog, Transition } from "@headlessui/react";
+import { Fragment } from "react";
 
 export default function AddQuestion(props) {
-  const { isOpen, closeModal } = props;
+  const { isOpen, closeModal, addQuestionUtil } = props;
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      questionText: "",
+    },
+  });
 
   return (
     <>
@@ -32,23 +44,52 @@ export default function AddQuestion(props) {
                 leaveTo="opacity-0 scale-95"
               >
                 <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
+                  <form
+                    onSubmit={handleSubmit((data) => addQuestionUtil(data))}
+                    className="sm:w-3/4 mx-auto my-3"
                   >
-                    Payment successful
-                  </Dialog.Title>
-                  
+                    <p className="text-center font-bold text-2xl my-8 text-gray-700">
+                      ADD QUESTION
+                    </p>
+                    <div className="flex flex-col justify-center">
+                      <div className="mb-4">
+                        <label
+                          className="block text-gray-700 text-sm font-bold mb-2"
+                          htmlFor="description"
+                        >
+                          Description of the question you want to add
+                        </label>
+                        <textarea
+                          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                          id="description"
+                          type="text"
+                          placeholder="Question Description"
+                          rows="10"
+                          {...register("questionText", { required: true })}
+                        ></textarea>
+                        {errors.description && (
+                          <p className="text-red-500">
+                            Description is required.
+                          </p>
+                        )}
+                      </div>
 
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
-                      onClick={closeModal}
-                    >
-                      Got it, thanks!
-                    </button>
-                  </div>
+                      <div>
+                        <input
+                          className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                          type="submit"
+                          value="Add Question"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => closeModal()}
+                          className="shadow mx-3 bg-gray-500 hover:bg-gray-700 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </div>
+                  </form>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
@@ -56,5 +97,5 @@ export default function AddQuestion(props) {
         </Dialog>
       </Transition>
     </>
-  )
+  );
 }
