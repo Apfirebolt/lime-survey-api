@@ -8,6 +8,7 @@ from backend.auth import router as auth_router
 from backend.survey import router as survey_router
 from backend.questions import router as question_router
 from backend.options import router as option_router
+from backend.response import router as response_router
 
 app = FastAPI(title="Fast API Survey",
     docs_url="/lime-survey-docs",
@@ -28,6 +29,7 @@ app.include_router(auth_router.router)
 app.include_router(survey_router.router)
 app.include_router(question_router.router)
 app.include_router(option_router.router)
+app.include_router(response_router.router)
 
 # app.mount("/static", StaticFiles(directory="frontend/build/static"), name="static")
 
