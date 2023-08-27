@@ -6,7 +6,7 @@ from backend.db import Base
 
 
 class UserResponse(Base):
-    __tablename__ = "survey"
+    __tablename__ = "user_response"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     createdDate = Column(DateTime, default=datetime.now)

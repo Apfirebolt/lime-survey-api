@@ -3,6 +3,7 @@ import HomeScreen from "./pages/Home";
 import LoginScreen from "./pages/Login";
 import RegisterScreen from "./pages/Register";
 import SurveyScreen from "./pages/Survey";
+import TestPage from "./pages/TestPage";
 import { ToastContainer } from 'react-toastify';
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
@@ -17,6 +18,7 @@ const App = () => {
         <Route path="/" element={<HomeScreen />} exact />
         <Route path="/login" element={<LoginScreen />} exact />
         <Route path="/register" element={<RegisterScreen />} exact />
+        <Route path="/test" element={<TestPage />} exact />
         <Route path="/survey" element={<PrivateRoute />}>
           <Route path="/survey" element={<SurveyScreen />} />
         </Route>

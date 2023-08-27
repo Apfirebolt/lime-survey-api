@@ -16,7 +16,7 @@ class UserResponseBase(BaseModel):
     id: Optional[int]
     survey_id: str
     user_id: str
-    response: json
+    response: str
 
     class Config:
         orm_mode = True
@@ -27,7 +27,7 @@ class UserResponseList(BaseModel):
     survey_id: str
     user_id: int
     createdDate: date
-    response: json
+    response: str
 
     class Config:
         orm_mode = True

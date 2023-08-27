@@ -18,7 +18,7 @@ router = APIRouter(
 
 @router.post('/', status_code=status.HTTP_201_CREATED,
              response_model=schema.UserResponseBase)
-async def create_new_response(request: schema.ResponseBase, database: Session = Depends(db.get_db), 
+async def create_new_response(request: schema.UserResponseBase, database: Session = Depends(db.get_db), 
     current_user: User = Depends(get_current_user)):
     user = database.query(User).filter(User.email == current_user.email).first()
     result = await services.create_new_response(request, database, user)
