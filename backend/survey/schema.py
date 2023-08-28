@@ -37,6 +37,7 @@ class SurveyList(BaseModel):
     user_id: int
     createdDate: date
     questions: List[QuestionBase]
+    owner: UserSchema
 
     class Config:
         orm_mode = True

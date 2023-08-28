@@ -1,18 +1,26 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
+import SurveyRadio from "../components/SurveyRadio";
 
 import { getSurvey } from "../features/survey/surveySlice";
 
 const SurveyResponse = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const [jsonResponse, setJSONResponse] = useState({});
 
   useEffect(() => {
     dispatch(getSurvey(params.id));
   }, [dispatch, params.id]);
 
   const { survey } = useSelector((state) => state.survey);
+
+  const collectResponse = (question, option) => {
+    let currentResponse = {...jsonResponse};
+    currentResponse[question.id] = option;
+    setJSONResponse(currentResponse);
+  }
 
   return (
     <>
@@ -23,33 +31,31 @@ const SurveyResponse = () => {
               Survey Response - {survey && survey.title}
             </h1>
           </div>
-          
         </div>
         {survey.questions &&
-            survey.questions.map((question) => (
-              <div
-                className="flex w-3/4 mx-auto justify-around items-center my-1"
-                key={question.id}
-              >
-                <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
-                  <p>{question.questionText}</p>
-
-                  <p className="my-3 text-gray-500 font-medium text-lg">
-                    {question.options.length > 0 ? "Options" : ""}
-                  </p>
-                  {question.options &&
-                    question.options.map((option) => (
-                      <p key={option.id}>{option.optionText}</p>
-                    ))}
-                </div>
+          survey.questions.map((question) => (
+            <div
+              className="flex w-3/4 mx-auto justify-around items-center my-1"
+              key={question.id}
+            >
+              <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
+                <p>{question.questionText}</p>
+                {question.options && <SurveyRadio options={question.options} question={question} collectResponse={collectResponse} />}
               </div>
-            ))}
+            </div>
+          ))}
+
+        <div className="flex justify-center my-3">
+          <button
+            className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
+            onClick={() => console.log(jsonResponse)}
+          >
+            Submit Response
+          </button>
+        </div>
       </div>
     </>
   );
 };
 
 export default SurveyResponse;
-
-
-

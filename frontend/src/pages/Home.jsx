@@ -51,7 +51,7 @@ const Home = () => {
                           Created By
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {survey.createdBy}
+                          {survey.owner.username}
                         </dd>
                       </div>
                       <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -59,7 +59,7 @@ const Home = () => {
                           Created At
                         </dt>
                         <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                          {survey.createdAt}
+                          {survey.createdDate}
                         </dd>
                         <div className="my-1">
                           <Link
