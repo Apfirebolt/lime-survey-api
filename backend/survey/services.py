@@ -13,8 +13,12 @@ async def create_new_survey(request, database, current_user) -> models.Survey:
     return new_survey
 
 
-async def get_survey_listing(database, current_user) -> List[models.Survey]:
+async def get_survey_listing(database) -> List[models.Survey]:
     surveys = database.query(models.Survey).all()
+    return surveys
+
+async def get_my_survey_listing(database, current_user) -> List[models.Survey]:
+    surveys = database.query(models.Survey).filter_by(user_id=current_user.id).all()
     return surveys
 
 

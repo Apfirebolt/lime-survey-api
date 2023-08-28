@@ -27,9 +27,16 @@ async def create_new_survey(request: schema.SurveyBase, database: Session = Depe
 
 @router.get('/', status_code=status.HTTP_200_OK,
             response_model=List[schema.SurveyList])
+async def survey_list(database: Session = Depends(db.get_db)):
+    result = await services.get_survey_listing(database)
+    return result
+
+
+@router.get('/my-surveys', status_code=status.HTTP_200_OK,
+            response_model=List[schema.SurveyList])
 async def survey_list(database: Session = Depends(db.get_db),
                                 current_user: User = Depends(get_current_user)):
-    result = await services.get_survey_listing(database, current_user.id)
+    result = await services.get_my_survey_listing(database, current_user.id)
     return result
 
 

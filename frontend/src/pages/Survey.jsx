@@ -25,7 +25,7 @@ const Survey = () => {
         </div>
       </div>
       <div className="grid md:grid-cols-4 gap-6">
-        {surveys.map((survey, index) => (
+        {surveys.length > 1 && surveys.map((survey, index) => (
           <SurveyItem key={index} survey={survey} />
         ))}
       </div>
