@@ -8,6 +8,7 @@ from backend.db import Base
 
 from backend.auth.models import User
 from backend.survey.models import Survey, Question, Option
+from backend.response.models import UserResponse
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

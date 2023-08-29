@@ -3,6 +3,7 @@ import authReducer from './features/auth/authSlice'
 import surveyReducer from './features/survey/surveySlice'
 import questionReducer from './features/question/questionSlice'
 import optionReducer from './features/option/optionSlice'
+import responseReducer from './features/userResponse/userResponseSlice'
 
 
 export const store = configureStore({
@@ -11,5 +12,6 @@ export const store = configureStore({
     survey: surveyReducer,
     question: questionReducer,
     option: optionReducer,
+    response: responseReducer,
   },
 })

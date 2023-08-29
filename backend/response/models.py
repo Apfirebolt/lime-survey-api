@@ -12,7 +12,7 @@ class UserResponse(Base):
     createdDate = Column(DateTime, default=datetime.now)
     survey_id = Column(Integer, ForeignKey("survey.id", ondelete="CASCADE"))
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
-    response = Column(JSON)
+    response = Column(JSON, nullable=False, server_default='{}')
     
 
 
