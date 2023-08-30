@@ -93,7 +93,7 @@ const deleteUserResponse = async (userResponseId, token) => {
         Authorization: `Bearer ${token}`,
       },
     }
-  
+    console.log('Inside service ', userResponseId)
     const response = await axios.delete(API_URL + userResponseId, config)
   
     return response.data

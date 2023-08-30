@@ -1,38 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 
-import { getUserResponses, deleteUserResponse } from "../features/userResponse/userResponseSlice";
+import {
+  getUserResponses,
+  deleteUserResponse,
+} from "../features/userResponse/userResponseSlice";
 
 const MyResponses = () => {
   const dispatch = useDispatch();
-  const params = useParams();
-  const [toastMessage, setToastMessage] = useState('')
+  const [toastMessage, setToastMessage] = useState("");
+
+  const { isLoading, isSuccess, isError, message, responses, resetVariables } = useSelector(
+    (state) => state.response
+  );
 
   useEffect(() => {
     dispatch(getUserResponses());
   }, [dispatch]);
 
-  const { isLoading, isSuccess, isError, message, responses } = useSelector((state) => state.response);
-
   useEffect(() => {
-
     if (isError) {
-      toast.error(message)
-      
+      toast.error(message);
     }
 
     if (isSuccess && toastMessage) {
-      toast.success(toastMessage)
+      toast.success(toastMessage);
     }
-  }, [dispatch, isError, isSuccess, message, toastMessage])
+  }, [dispatch, isError, isSuccess, message, toastMessage]);
 
-//   const deleteResponseUtil = () => {
-//     deleteUserResponse(params.id)
-//     setToastMessage('Survey response deleted successfully!')
-//   }
+  const deleteResponseUtil = (responseId) => {
+    dispatch(deleteUserResponse(responseId));
+    setToastMessage("User response deleted successfully!");
+    dispatch(getUserResponses());
+  };
 
   if (isLoading) {
     return <Loader />;
@@ -56,10 +58,11 @@ const MyResponses = () => {
             >
               <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
                 <p>{response.survey_id}</p>
-                <p>
-                    {response.response}
-                </p>
+                <p>{response.response}</p>
               </div>
+              <button onClick={() => deleteResponseUtil(response.id)}>
+                Delete
+              </button>
             </div>
           ))}
       </div>

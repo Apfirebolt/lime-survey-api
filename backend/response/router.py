@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from backend.auth.jwt import get_current_user
 from backend.auth.models import User
@@ -34,6 +34,13 @@ async def response_list(database: Session = Depends(db.get_db),
 
 
 @router.get('/{response_id}', status_code=status.HTTP_200_OK, response_model=schema.UserResponseBase)
-async def get_response_by_id(survey_id: int, database: Session = Depends(db.get_db),
+async def get_response_by_id(response_id: int, database: Session = Depends(db.get_db),
                                 current_user: User = Depends(get_current_user)):                            
-    return await services.get_response_by_id(survey_id, current_user.id, database)
+    return await services.get_response_by_id(response_id, current_user.id, database)
+
+
+@router.delete('/{response_id}', status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
+async def delete_response_by_id(response_id: int, database: Session = Depends(db.get_db),
+                                current_user: User = Depends(get_current_user)):                            
+    return await services.delete_response_by_id(response_id, database)
+

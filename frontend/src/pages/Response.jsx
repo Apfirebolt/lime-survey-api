@@ -41,7 +41,6 @@ const SurveyResponse = () => {
     let currentResponse = {...jsonResponse};
     currentResponse[question.id] = option;
     setJSONResponse(currentResponse);
-    setToastMessage('Survey response submitted successfully!')
   }
 
   const submitUserResponse = () => {
@@ -50,6 +49,7 @@ const SurveyResponse = () => {
       response: JSON.stringify(jsonResponse)
     }
     dispatch(createUserResponse(data));
+    setToastMessage('Survey response submitted successfully!')
   }
 
   if (isLoading) {

@@ -9,15 +9,13 @@ const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { user, profile, isLoading } = useSelector((state) => state.auth);
+  const { user, isLoading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (user) {
       dispatch(getUserProfile());
     }
   }, [dispatch, user]);
-
-  console.log('User is ', profile)
 
   if (isLoading) {
     return <Loader />;
@@ -68,6 +66,12 @@ const Header = () => {
                   className="text-sm font-medium text-white hover:text-gray-100"
                 >
                   Surveys
+                </Link>
+                <Link
+                  to="/my-responses"
+                  className="text-sm font-medium text-white hover:text-gray-100"
+                >
+                  My Responses
                 </Link>
                 <Link
                   to="/"

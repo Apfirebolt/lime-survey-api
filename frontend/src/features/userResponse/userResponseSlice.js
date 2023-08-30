@@ -97,6 +97,7 @@ export const deleteUserResponse = createAsyncThunk(
   async (responseId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.access_token;
+      console.log('Before API request ', responseId)
       return await userResponseService.deleteUserResponse(responseId, token);
     } catch (error) {
       const message =
