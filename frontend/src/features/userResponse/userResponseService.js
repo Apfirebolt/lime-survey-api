@@ -30,7 +30,6 @@ const getUserResponses = async (token) => {
         Authorization: `Bearer ${token}`,
       },
     }
-    console.log('Calling API here ..')
     const response = await axios.get(API_URL, config)
     return response.data
   } catch (err) {
@@ -93,7 +92,6 @@ const deleteUserResponse = async (userResponseId, token) => {
         Authorization: `Bearer ${token}`,
       },
     }
-    console.log('Inside service ', userResponseId)
     const response = await axios.delete(API_URL + userResponseId, config)
   
     return response.data

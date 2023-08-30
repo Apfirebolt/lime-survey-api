@@ -57,10 +57,18 @@ const MyResponses = () => {
               key={response.id}
             >
               <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
-                <p>{response.survey_id}</p>
-                <p>{response.response}</p>
+              {Object.keys(JSON.parse(response.response)).map((item) => (
+                  <div className="my-3 px-3 py-4 bg-blue-700 text-gray-100" key={item}>
+                    <p>
+                      Question {JSON.parse(response.response)[item].questionText}
+                    </p>
+                    <p>
+                      Answer: {JSON.parse(response.response)[item].optionText}
+                    </p>
+                  </div>
+                ))}
               </div>
-              <button onClick={() => deleteResponseUtil(response.id)}>
+              <button onClick={() => deleteResponseUtil(response.id)} className="bg-red-500 rounded hover:bg-red-800 p-3 text-gray-100">
                 Delete
               </button>
             </div>

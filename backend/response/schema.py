@@ -23,7 +23,7 @@ class UserResponseBase(BaseModel):
 
 class UserResponseList(BaseModel):
     id: int
-    survey_id: str
+    survey_id: int
     user_id: int
     createdDate: date
     response: str

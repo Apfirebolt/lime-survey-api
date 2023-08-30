@@ -6,8 +6,6 @@ import { Fragment } from "react";
 export default function AddOption(props) {
   const { isOpen, closeModal, addOptionUtil, selectedQuestion } = props;
 
-
-  console.log(selectedQuestion)
   const {
     register,
     handleSubmit,

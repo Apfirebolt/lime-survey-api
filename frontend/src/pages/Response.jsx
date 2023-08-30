@@ -31,15 +31,17 @@ const SurveyResponse = () => {
 
     if (isSuccess && toastMessage) {
       toast.success(toastMessage)
-      navigate('/survey')
+      navigate('/my-responses')
     }
   }, [dispatch, isError, isSuccess, message, navigate, resetVariables, toastMessage])
 
-  console.log(isSuccess, isError, message, toastMessage)
-
   const collectResponse = (question, option) => {
     let currentResponse = {...jsonResponse};
-    currentResponse[question.id] = option;
+  
+    currentResponse[question.id] = {
+      questionText: question.questionText,
+      optionText: option
+    };
     setJSONResponse(currentResponse);
   }
 

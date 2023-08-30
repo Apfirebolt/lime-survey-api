@@ -97,7 +97,6 @@ export const deleteUserResponse = createAsyncThunk(
   async (responseId, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.access_token;
-      console.log('Before API request ', responseId)
       return await userResponseService.deleteUserResponse(responseId, token);
     } catch (error) {
       const message =
@@ -131,7 +130,6 @@ export const userResponseSlice = createSlice({
       .addCase(createUserResponse.fulfilled, (state) => {
         state.isLoading = false;
         state.isSuccess = true;
-        console.log('State is: ', state.isSuccess)
       })
       .addCase(createUserResponse.rejected, (state, action) => {
         state.isLoading = false;
