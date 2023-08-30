@@ -1,25 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import SurveyRadio from "../components/SurveyRadio";
+import Loader from "../components/Loader";
 
 import { getSurvey } from "../features/survey/surveySlice";
+import { createUserResponse } from "../features/userResponse/userResponseSlice";
 
 const SurveyResponse = () => {
   const dispatch = useDispatch();
   const params = useParams();
+  const navigate = useNavigate();
   const [jsonResponse, setJSONResponse] = useState({});
+  const [toastMessage, setToastMessage] = useState('')
 
   useEffect(() => {
     dispatch(getSurvey(params.id));
   }, [dispatch, params.id]);
 
   const { survey } = useSelector((state) => state.survey);
+  const { isLoading, isSuccess, isError, message, resetVariables } = useSelector((state) => state.response);
+
+  useEffect(() => {
+
+    if (isError) {
+      toast.error(message)
+      dispatch(resetVariables())
+    }
+
+    if (isSuccess && toastMessage) {
+      toast.success(toastMessage)
+      navigate('/survey')
+    }
+  }, [dispatch, isError, isSuccess, message, navigate, resetVariables, toastMessage])
+
+  console.log(isSuccess, isError, message, toastMessage)
 
   const collectResponse = (question, option) => {
     let currentResponse = {...jsonResponse};
     currentResponse[question.id] = option;
     setJSONResponse(currentResponse);
+    setToastMessage('Survey response submitted successfully!')
+  }
+
+  const submitUserResponse = () => {
+    const data = {
+      survey_id: survey.id,
+      response: JSON.stringify(jsonResponse)
+    }
+    dispatch(createUserResponse(data));
+  }
+
+  if (isLoading) {
+    return <Loader />;
   }
 
   return (
@@ -48,7 +82,7 @@ const SurveyResponse = () => {
         <div className="flex justify-center my-3">
           <button
             className="shadow bg-purple-500 hover:bg-purple-400 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
-            onClick={() => console.log(jsonResponse)}
+            onClick={() => submitUserResponse()}
           >
             Submit Response
           </button>

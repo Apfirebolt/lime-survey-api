@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import userResponseService from "./userResponseService";
 
 const initialState = {
-  responsess: [],
+  responses: [],
   response: {},
   isError: false,
   isSuccess: false,
@@ -36,7 +36,7 @@ export const getUserResponses = createAsyncThunk(
   async (_, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.access_token;
-      return await userResponseService.getUserResponse(token);
+      return await userResponseService.getUserResponses(token);
     } catch (error) {
       const message =
         (error.response &&
@@ -130,6 +130,7 @@ export const userResponseSlice = createSlice({
       .addCase(createUserResponse.fulfilled, (state) => {
         state.isLoading = false;
         state.isSuccess = true;
+        console.log('State is: ', state.isSuccess)
       })
       .addCase(createUserResponse.rejected, (state, action) => {
         state.isLoading = false;
@@ -141,6 +142,7 @@ export const userResponseSlice = createSlice({
       })
       .addCase(getUserResponses.fulfilled, (state, action) => {
         state.isLoading = false;
+        state.isSuccess = true;
         state.responses = action.payload;
       })
       .addCase(getUserResponses.rejected, (state, action) => {
@@ -148,14 +150,14 @@ export const userResponseSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      .addCase(getUserResponse.pending, (state) => {
+      .addCase(getResponse.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getUserResponse.fulfilled, (state, action) => {
+      .addCase(getResponse.fulfilled, (state, action) => {
         state.isLoading = false;
         state.response = action.payload;
       })
-      .addCase(getUserResponse.rejected, (state, action) => {
+      .addCase(getResponse.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

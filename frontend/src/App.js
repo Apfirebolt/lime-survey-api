@@ -7,6 +7,7 @@ import AddSurveyScreen from "./pages/AddSurvey";
 import SurveyDetail from "./pages/SurveyDetail";
 import SurveyResponse from "./pages/Response";
 import TestPage from "./pages/TestPage";
+import MyResponses from "./pages/MyResponses";
 import { ToastContainer } from 'react-toastify';
 import PrivateRoute from "./components/PrivateRoute";
 import Footer from "./components/Footer";
@@ -29,6 +30,9 @@ const App = () => {
         </Route>
         <Route path="/response" element={<PrivateRoute />}>
           <Route path="/response/:id" element={<SurveyResponse />} />
+        </Route>
+        <Route path="/my-responses" element={<PrivateRoute />}>
+          <Route path="/my-responses" element={<MyResponses />} />
         </Route>
       </Routes>
       <Footer />

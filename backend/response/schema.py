@@ -15,7 +15,6 @@ class UserSchema(BaseModel):
 class UserResponseBase(BaseModel):
     id: Optional[int]
     survey_id: str
-    user_id: str
     response: str
 
     class Config:

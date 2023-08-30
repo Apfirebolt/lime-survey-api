@@ -23,13 +23,14 @@ const createUserResponse = async (userResponseData, token) => {
 }
 
 // Get user user responses
-const getuserResponses = async (token) => {
+const getUserResponses = async (token) => {
   try {
     const config = {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     }
+    console.log('Calling API here ..')
     const response = await axios.get(API_URL, config)
     return response.data
   } catch (err) {
@@ -108,9 +109,9 @@ const deleteUserResponse = async (userResponseId, token) => {
 const userResponseService = {
   createUserResponse,
   getUserResponse,
+  getUserResponses,
   updateUserResponse,
   deleteUserResponse
-  getUserResponse,
 }
 
 export default userResponseService
