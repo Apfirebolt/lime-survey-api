@@ -12,7 +12,7 @@ const MyResponses = () => {
   const dispatch = useDispatch();
   const [toastMessage, setToastMessage] = useState("");
 
-  const { isLoading, isSuccess, isError, message, responses, resetVariables } = useSelector(
+  const { isLoading, isSuccess, isError, message, responses } = useSelector(
     (state) => state.response
   );
 
@@ -53,22 +53,23 @@ const MyResponses = () => {
         {responses &&
           responses.map((response) => (
             <div
-              className="flex w-3/4 mx-auto justify-around items-center my-1"
+              className="w-3/4 mx-auto my-1"
               key={response.id}
             >
-              <div className="shadow bottom-3 md:grid-cols-4 w-4/5 text-gray-700 px-3 py-4">
+              <h3 className="text-center my-3 text-xl font-semibold border-b-orange-400">{response.survey.title}</h3>
+              <div className="shadow bottom-3 w-4/5 text-gray-700 px-3 py-4">
               {Object.keys(JSON.parse(response.response)).map((item) => (
-                  <div className="my-3 px-3 py-4 bg-blue-700 text-gray-100" key={item}>
+                  <div className="my-3 px-3 py-4 bg-blue-100 text-gray-700" key={item}>
                     <p>
-                      Question {JSON.parse(response.response)[item].questionText}
+                      <span className="text-gray-900 font-semibold">Question : </span>{JSON.parse(response.response)[item].questionText}
                     </p>
                     <p>
-                      Answer: {JSON.parse(response.response)[item].optionText}
+                      <span className="text-gray-900 font-semibold">Answer :</span> {JSON.parse(response.response)[item].optionText}
                     </p>
                   </div>
                 ))}
               </div>
-              <button onClick={() => deleteResponseUtil(response.id)} className="bg-red-500 rounded hover:bg-red-800 p-3 text-gray-100">
+              <button onClick={() => deleteResponseUtil(response.id)} className="bg-red-500 mx-auto my-3 rounded hover:bg-red-800 p-3 text-gray-100">
                 Delete
               </button>
             </div>

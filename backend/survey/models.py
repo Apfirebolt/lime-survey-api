@@ -18,6 +18,7 @@ class Survey(Base):
     # A user has multiple surveys, FK to link them
     owner = relationship("User", back_populates="surveys")
     questions = relationship("Question", back_populates="survey")
+    user_responses = relationship("UserResponse", back_populates="survey")
 
 
 class Question(Base):

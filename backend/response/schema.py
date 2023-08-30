@@ -24,6 +24,7 @@ class UserResponseBase(BaseModel):
 class UserResponseList(BaseModel):
     id: int
     survey_id: int
+    survey: SurveyBase
     user_id: int
     createdDate: date
     response: str

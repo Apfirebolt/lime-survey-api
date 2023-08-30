@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
-import { Disclosure, Transition } from '@headlessui/react'
 import AddQuestion from "../components/AddQuestion";
 import AddOption from "../components/AddOption";
 import ConfirmModal from "../components/ConfirmModal";

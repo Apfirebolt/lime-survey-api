@@ -1,4 +1,5 @@
 from datetime import datetime
+from sqlalchemy.orm import relationship
 from sqlalchemy import Column, ForeignKey, DateTime, Integer, JSON
 
 
@@ -13,6 +14,10 @@ class UserResponse(Base):
     survey_id = Column(Integer, ForeignKey("survey.id", ondelete="CASCADE"))
     user_id = Column(Integer, ForeignKey("user.id", ondelete="CASCADE"))
     response = Column(JSON, nullable=False, server_default='{}')
+
+    # survey relationship
+    survey = relationship("Survey", back_populates="user_responses")
+                      
     
 
 
