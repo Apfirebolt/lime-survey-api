@@ -180,7 +180,6 @@ export const userResponseSlice = createSlice({
       .addCase(deleteUserResponse.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        getUserResponses()
       })
       .addCase(deleteUserResponse.rejected, (state, action) => {
         state.isLoading = false

@@ -86,7 +86,6 @@ const SurveyDetail = () => {
     if (isSuccess && toastMessage) {
       toast.success(toastMessage, toastOptions);
       dispatch(resetVariables());
-      navigate("/survey");
     }
   }, [dispatch, isError, isSuccess, navigate, message, toastMessage]);
 
@@ -113,11 +112,12 @@ const SurveyDetail = () => {
     e.preventDefault();
     setToastMessage("Survey successfully deleted!");
     dispatch(deleteSurvey(params.id));
+    navigate("/survey");
   };
 
-  const deleteQuestionUtil = () => {
+  const deleteQuestionUtil = async () => {
     setToastMessage("Question successfully deleted!");
-    dispatch(deleteQuestion(selectedQuestion.id));
+    await dispatch(deleteQuestion(selectedQuestion.id));
   };
 
   const updateSurveyUtil = (data) => {
@@ -126,14 +126,18 @@ const SurveyDetail = () => {
     dispatch(updateSurvey(data));
   };
 
-  const addQuestionUtil = (data) => {
+  const addQuestionUtil = async (data) => {
     setToastMessage("Question successfully added!");
-    dispatch(createQuestion({ ...data, survey_id: survey.id }));
+    await dispatch(createQuestion({ ...data, survey_id: survey.id }));
+    dispatch(getSurvey(params.id));
+    closeQuestionModal();
   };
 
-  const addOptionUtil = (data) => {
+  const addOptionUtil = async (data) => {
     setToastMessage("Option successfully added!");
-    dispatch(createOption({ ...data, question_id: selectedQuestion.id }));
+    await dispatch(createOption({ ...data, question_id: selectedQuestion.id }));
+    dispatch(getSurvey(params.id));
+    closeOptionModal();
   };
 
   const confirmQuestionDeleteUtil = (data) => {

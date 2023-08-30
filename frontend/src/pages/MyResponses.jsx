@@ -30,8 +30,8 @@ const MyResponses = () => {
     }
   }, [dispatch, isError, isSuccess, message, toastMessage]);
 
-  const deleteResponseUtil = (responseId) => {
-    dispatch(deleteUserResponse(responseId));
+  const deleteResponseUtil = async (responseId) => {
+    await dispatch(deleteUserResponse(responseId));
     setToastMessage("User response deleted successfully!");
     dispatch(getUserResponses());
   };
