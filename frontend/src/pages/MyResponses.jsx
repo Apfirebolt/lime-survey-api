@@ -52,26 +52,39 @@ const MyResponses = () => {
         </div>
         {responses &&
           responses.map((response) => (
-            <div
-              className="w-3/4 mx-auto my-1"
-              key={response.id}
-            >
-              <h3 className="text-center my-3 text-xl font-semibold border-b-orange-400">{response.survey.title}</h3>
-              <div className="shadow bottom-3 w-4/5 text-gray-700 px-3 py-4">
-              {Object.keys(JSON.parse(response.response)).map((item) => (
-                  <div className="my-3 px-3 py-4 bg-blue-100 text-gray-700" key={item}>
-                    <p>
-                      <span className="text-gray-900 font-semibold">Question : </span>{JSON.parse(response.response)[item].questionText}
-                    </p>
-                    <p>
-                      <span className="text-gray-900 font-semibold">Answer :</span> {JSON.parse(response.response)[item].optionText}
-                    </p>
-                  </div>
-                ))}
+            <div className="w-3/4 mx-auto my-1 shadow-xl" key={response.id}>
+              <div className="flex flex-col justify-center">
+                <h3 className="text-center my-3 text-xl font-semibold border-b-orange-400">
+                  {response.survey.title}
+                </h3>
+                <div className="mx-auto bottom-3 w-4/5 text-gray-700 px-3 py-4">
+                  {Object.keys(JSON.parse(response.response)).map((item) => (
+                    <div
+                      className="my-3 px-3 py-4 bg-blue-100 text-gray-700"
+                      key={item}
+                    >
+                      <p>
+                        <span className="text-gray-900 font-semibold">
+                          Question :{" "}
+                        </span>
+                        {JSON.parse(response.response)[item].questionText}
+                      </p>
+                      <p>
+                        <span className="text-gray-900 font-semibold">
+                          Answer :
+                        </span>{" "}
+                        {JSON.parse(response.response)[item].optionText}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  onClick={() => deleteResponseUtil(response.id)}
+                  className="bg-red-500 mx-auto my-3 rounded hover:bg-red-800 p-3 text-gray-100"
+                >
+                  Delete
+                </button>
               </div>
-              <button onClick={() => deleteResponseUtil(response.id)} className="bg-red-500 mx-auto my-3 rounded hover:bg-red-800 p-3 text-gray-100">
-                Delete
-              </button>
             </div>
           ))}
       </div>
