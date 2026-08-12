@@ -12,16 +12,14 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
-  // Combine Redux selectors into a single call for cleaner code
   const { user, profile, isLoading } = useSelector((state) => state.auth);
 
-  // Trigger profile fetch when user logs in
+  // Fetch user profile whenever logged-in user token exists but profile isn't fetched yet
   useEffect(() => {
-    // Check if user exists (logged in) but profile data hasn't loaded yet
-    if (user && !profile) {
+    if (user?.access_token && !profile && !isLoading) {
       dispatch(getUserProfile());
     }
-  }, [dispatch, user, profile]);
+  }, [dispatch, user, profile, isLoading]);
 
   // Close menus when route changes
   useEffect(() => {
@@ -31,7 +29,6 @@ const Header = () => {
 
   const onLogout = () => {
     toast.success("Logged out successfully");
-    // Ensure dropdown closes on logout
     setIsProfileDropdownOpen(false);
     dispatch(logout());
     dispatch(reset());
@@ -40,8 +37,18 @@ const Header = () => {
 
   const isActive = (path) => location.pathname === path;
 
-  // Derive "profileIsLoaded" to make UI rendering conditions cleaner
-  const profileIsLoaded = user && profile && !isLoading;
+  // Derive initial avatar letter safely with fallbacks
+  const getAvatarInitial = () => {
+    if (profile?.username) return profile.username.charAt(0).toUpperCase();
+    if (profile?.email) return profile.email.charAt(0).toUpperCase();
+    if (user?.username) return user.username.charAt(0).toUpperCase();
+    return "U";
+  };
+
+  // Derive user display label safely
+  const getUserDisplayName = () => {
+    return profile?.username || profile?.email || user?.username || user?.email || "User";
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800 shadow-xs">
@@ -81,8 +88,7 @@ const Header = () => {
               Explore Surveys
             </Link>
 
-            {/* Wait for profile to load before showing personalized link */}
-            {profileIsLoaded && (
+            {user && (
               <Link
                 to="/my-responses"
                 className={`transition-colors ${
@@ -98,9 +104,7 @@ const Header = () => {
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            
-            {/* Condition 1: User is logged in, and profile data is fully loaded */}
-            {profileIsLoaded ? (
+            {user ? (
               <div className="flex items-center space-x-3">
                 <Link
                   to="/survey/add"
@@ -117,8 +121,7 @@ const Header = () => {
                     aria-label="User menu"
                   >
                     <div className="h-8 w-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">
-                      {/* Access properties safely now that profile is loaded */}
-                      {profile.username ? profile.username.charAt(0) : "U"}
+                      {getAvatarInitial()}
                     </div>
                   </button>
 
@@ -128,7 +131,7 @@ const Header = () => {
                       <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
                         <p className="text-xs text-gray-500 dark:text-gray-400">Signed in as</p>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                          {profile.username || profile.email}
+                          {getUserDisplayName()}
                         </p>
                       </div>
 
@@ -142,15 +145,7 @@ const Header = () => {
                   )}
                 </div>
               </div>
-            ) : user && isLoading ? (
-              /* Condition 2: User is logged in, but profile data is still fetching */
-              <div className="flex items-center space-x-2 p-1.5 text-xs text-gray-500 dark:text-gray-400">
-                {/* Minimal inline spinner */}
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
-                <span>Loading Profile...</span>
-              </div>
             ) : (
-              /* Condition 3: User is not logged in (Guest) */
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
@@ -203,8 +198,7 @@ const Header = () => {
               Explore Surveys
             </Link>
 
-            {/* Personalized Mobile Links Condition: Wait for profile load */}
-            {profileIsLoaded ? (
+            {user ? (
               <>
                 <Link
                   to="/my-responses"
@@ -222,17 +216,10 @@ const Header = () => {
                   onClick={onLogout}
                   className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
                 >
-                  Log Out ({profile.username || profile.email})
+                  Log Out ({getUserDisplayName()})
                 </button>
               </>
-            ) : user && isLoading ? (
-                /* Personalized Mobile Links Condition: Profile fetching */
-                <div className="px-3 py-2 text-sm flex items-center space-x-2 text-gray-500 dark:text-gray-400">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
-                    <span>Loading Profile...</span>
-                </div>
             ) : (
-                /* Personalized Mobile Links Condition: Guest */
               <div className="pt-2 border-t border-gray-100 dark:border-gray-800 flex flex-col space-y-2">
                 <Link
                   to="/login"
