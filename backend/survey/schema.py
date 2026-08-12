@@ -9,7 +9,7 @@ class UserSchema(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SurveyBase(BaseModel):
@@ -19,7 +19,7 @@ class SurveyBase(BaseModel):
     questions: Optional[List[QuestionBase]]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SurveyUpdate(BaseModel):
@@ -27,7 +27,7 @@ class SurveyUpdate(BaseModel):
     description: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class SurveyList(BaseModel):
@@ -40,4 +40,4 @@ class SurveyList(BaseModel):
     owner: UserSchema
 
     class Config:
-        orm_mode = True
+        from_attributes = True

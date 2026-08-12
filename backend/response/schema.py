@@ -1,6 +1,6 @@
 from datetime import date
 from typing import Optional, List
-from pydantic import BaseModel, constr, EmailStr, json
+from pydantic import BaseModel, constr, EmailStr
 from backend.survey.schema import SurveyBase
 
 
@@ -9,7 +9,7 @@ class UserSchema(BaseModel):
     email: EmailStr
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserResponseBase(BaseModel):
@@ -18,7 +18,7 @@ class UserResponseBase(BaseModel):
     response: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class UserResponseList(BaseModel):
@@ -30,4 +30,4 @@ class UserResponseList(BaseModel):
     response: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True

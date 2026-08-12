@@ -9,14 +9,14 @@ class OptionBase(BaseModel):
     question_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class OptionUpdate(BaseModel):
     optionText: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class OptionList(BaseModel):
@@ -26,4 +26,4 @@ class OptionList(BaseModel):
     question_id: int
 
     class Config:
-        orm_mode = True
+        from_attributes = True

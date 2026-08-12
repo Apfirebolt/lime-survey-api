@@ -12,14 +12,14 @@ class QuestionBase(BaseModel):
 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class QuestionUpdate(BaseModel):
     questionText: Optional[str]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class QuestionList(BaseModel):
@@ -28,4 +28,4 @@ class QuestionList(BaseModel):
     createdDate: date
 
     class Config:
-        orm_mode = True
+        from_attributes = True
