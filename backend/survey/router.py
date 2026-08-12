@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, status, Response, Request
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from backend.auth.jwt import get_current_user
 from backend.auth.models import User
@@ -18,8 +18,11 @@ router = APIRouter(
 
 @router.post('/', status_code=status.HTTP_201_CREATED,
              response_model=schema.SurveyBase)
-async def create_new_survey(request: schema.SurveyBase, database: Session = Depends(db.get_db), 
-    current_user: User = Depends(get_current_user)):
+async def create_new_survey(
+    request: schema.SurveyBase,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> schema.SurveyBase:
     user = database.query(User).filter(User.email == current_user.email).first()
     result = await services.create_new_survey(request, database, user)
     return result
@@ -27,33 +30,44 @@ async def create_new_survey(request: schema.SurveyBase, database: Session = Depe
 
 @router.get('/', status_code=status.HTTP_200_OK,
             response_model=List[schema.SurveyList])
-async def survey_list(database: Session = Depends(db.get_db)):
+async def survey_list(database: Session = Depends(db.get_db)) -> List[schema.SurveyList]:
     result = await services.get_survey_listing(database)
     return result
 
 
 @router.get('/my-surveys', status_code=status.HTTP_200_OK,
             response_model=List[schema.SurveyList])
-async def survey_list(database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):
+async def my_survey_list(
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> List[schema.SurveyList]:
     result = await services.get_my_survey_listing(database, current_user.id)
     return result
 
 
 @router.get('/{survey_id}', status_code=status.HTTP_200_OK, response_model=schema.SurveyBase)
-async def get_survey_by_id(survey_id: int, database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):                            
+async def get_survey_by_id(
+    survey_id: int,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> schema.SurveyBase:
     return await services.get_survey_by_id(survey_id, current_user.id, database)
 
 
 @router.delete('/{survey_id}', status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
-async def delete_survey_by_id(survey_id: int,
-                                database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):
+async def delete_survey_by_id(
+    survey_id: int,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> None:
     return await services.delete_survey_by_id(survey_id, database)
 
 
 @router.patch('/{survey_id}', status_code=status.HTTP_200_OK, response_model=schema.SurveyBase)
-async def update_survey_by_id(request: schema.SurveyUpdate, survey_id: int, database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):                            
+async def update_survey_by_id(
+    request: schema.SurveyUpdate,
+    survey_id: int,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> schema.SurveyBase:
     return await services.update_survey_by_id(request, survey_id, current_user.id, database)

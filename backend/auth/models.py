@@ -1,3 +1,4 @@
+from typing import Any
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from backend.db import Base
@@ -18,7 +19,17 @@ class User(Base):
 
     surveys = relationship("Survey", back_populates="owner")
 
-    def __init__(self, username, email, role, password, firstName, lastName, *args, **kwargs):
+    def __init__(
+        self,
+        username: str,
+        email: str,
+        role: str,
+        password: str,
+        firstName: str,
+        lastName: str,
+        *args: Any,
+        **kwargs: Any,
+    ) -> None:
         self.username = username
         self.email = email
         self.role = role
@@ -26,5 +37,5 @@ class User(Base):
         self.lastName = lastName
         self.password = hashing.get_password_hash(password)
 
-    def check_password(self, password):
+    def check_password(self, password: str) -> bool:
         return hashing.verify_password(self.password, password)

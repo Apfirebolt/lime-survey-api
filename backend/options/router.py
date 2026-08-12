@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import APIRouter, Depends, status, Response, Request
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 from backend.auth.jwt import get_current_user
 from backend.auth.models import User
@@ -18,8 +18,11 @@ router = APIRouter(
 
 @router.post('/', status_code=status.HTTP_201_CREATED,
              response_model=schema.OptionBase)
-async def create_new_option(request: schema.OptionBase, database: Session = Depends(db.get_db), 
-    current_user: User = Depends(get_current_user)):
+async def create_new_option(
+    request: schema.OptionBase,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> schema.OptionBase:
     user = database.query(User).filter(User.email == current_user.email).first()
     result = await services.create_new_option(request, database, user)
     return result
@@ -27,26 +30,37 @@ async def create_new_option(request: schema.OptionBase, database: Session = Depe
 
 @router.get('/', status_code=status.HTTP_200_OK,
             response_model=List[schema.OptionList])
-async def option_list(database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):
+async def option_list(
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> List[schema.OptionList]:
     result = await services.get_option_listing(database, current_user.id)
     return result
 
 
 @router.get('/{option_id}', status_code=status.HTTP_200_OK, response_model=schema.OptionBase)
-async def get_option_by_id(option_id: int, database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):                            
+async def get_option_by_id(
+    option_id: int,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> schema.OptionBase:
     return await services.get_option_by_id(option_id, current_user.id, database)
 
 
 @router.delete('/{option_id}', status_code=status.HTTP_204_NO_CONTENT, response_class=Response)
-async def delete_option_by_id(option_id: int,
-                                database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):
+async def delete_option_by_id(
+    option_id: int,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> None:
     return await services.delete_option_by_id(option_id, database)
 
 
 @router.patch('/{option_id}', status_code=status.HTTP_200_OK, response_model=schema.OptionBase)
-async def update_option_by_id(request: schema.OptionUpdate, option_id: int, database: Session = Depends(db.get_db),
-                                current_user: User = Depends(get_current_user)):                            
+async def update_option_by_id(
+    request: schema.OptionUpdate,
+    option_id: int,
+    database: Session = Depends(db.get_db),
+    current_user: User = Depends(get_current_user),
+) -> schema.OptionBase:
     return await services.update_option_by_id(request, option_id, current_user.id, database)
