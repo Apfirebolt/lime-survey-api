@@ -26,7 +26,7 @@ const Footer = () => {
             {/* Quick Action Buttons */}
             <div className="mt-5 flex items-center space-x-3">
               <Link
-                to="/create-survey"
+                to="/survey/add"
                 className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg shadow-xs hover:bg-emerald-700 transition-colors dark:bg-emerald-500 dark:hover:bg-emerald-600"
               >
                 + Create a Survey

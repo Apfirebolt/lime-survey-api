@@ -12,13 +12,16 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
 
-  const { user } = useSelector((state) => state.auth);
+  // Combine Redux selectors into a single call for cleaner code
+  const { user, profile, isLoading } = useSelector((state) => state.auth);
 
+  // Trigger profile fetch when user logs in
   useEffect(() => {
-    if (user && !user.name && !user.username) {
+    // Check if user exists (logged in) but profile data hasn't loaded yet
+    if (user && !profile) {
       dispatch(getUserProfile());
     }
-  }, [dispatch, user]);
+  }, [dispatch, user, profile]);
 
   // Close menus when route changes
   useEffect(() => {
@@ -28,12 +31,17 @@ const Header = () => {
 
   const onLogout = () => {
     toast.success("Logged out successfully");
+    // Ensure dropdown closes on logout
+    setIsProfileDropdownOpen(false);
     dispatch(logout());
     dispatch(reset());
     navigate("/");
   };
 
   const isActive = (path) => location.pathname === path;
+
+  // Derive "profileIsLoaded" to make UI rendering conditions cleaner
+  const profileIsLoaded = user && profile && !isLoading;
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-200 dark:bg-gray-900 dark:border-gray-800 shadow-xs">
@@ -63,9 +71,9 @@ const Header = () => {
               Home
             </Link>
             <Link
-              to="/surveys"
+              to="/survey"
               className={`transition-colors ${
-                isActive("/surveys")
+                isActive("/survey")
                   ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                   : "text-gray-600 hover:text-emerald-600 dark:text-gray-300 dark:hover:text-emerald-400"
               }`}
@@ -73,7 +81,8 @@ const Header = () => {
               Explore Surveys
             </Link>
 
-            {user && (
+            {/* Wait for profile to load before showing personalized link */}
+            {profileIsLoaded && (
               <Link
                 to="/my-responses"
                 className={`transition-colors ${
@@ -89,10 +98,12 @@ const Header = () => {
 
           {/* Right Action Buttons */}
           <div className="hidden md:flex md:items-center md:space-x-4">
-            {user ? (
+            
+            {/* Condition 1: User is logged in, and profile data is fully loaded */}
+            {profileIsLoaded ? (
               <div className="flex items-center space-x-3">
                 <Link
-                  to="/surveys/add"
+                  to="/survey/add"
                   className="inline-flex items-center justify-center px-4 py-2 text-xs font-semibold text-white bg-emerald-600 rounded-lg shadow-xs hover:bg-emerald-700 transition-colors dark:bg-emerald-500 dark:hover:bg-emerald-600"
                 >
                   + Create Survey
@@ -106,7 +117,8 @@ const Header = () => {
                     aria-label="User menu"
                   >
                     <div className="h-8 w-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs uppercase shadow-xs">
-                      {user.username ? user.username.charAt(0) : "U"}
+                      {/* Access properties safely now that profile is loaded */}
+                      {profile.username ? profile.username.charAt(0) : "U"}
                     </div>
                   </button>
 
@@ -116,7 +128,7 @@ const Header = () => {
                       <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
                         <p className="text-xs text-gray-500 dark:text-gray-400">Signed in as</p>
                         <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
-                          {user.username || user.email}
+                          {profile.username || profile.email}
                         </p>
                       </div>
 
@@ -130,7 +142,15 @@ const Header = () => {
                   )}
                 </div>
               </div>
+            ) : user && isLoading ? (
+              /* Condition 2: User is logged in, but profile data is still fetching */
+              <div className="flex items-center space-x-2 p-1.5 text-xs text-gray-500 dark:text-gray-400">
+                {/* Minimal inline spinner */}
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
+                <span>Loading Profile...</span>
+              </div>
             ) : (
+              /* Condition 3: User is not logged in (Guest) */
               <div className="flex items-center space-x-3">
                 <Link
                   to="/login"
@@ -177,13 +197,14 @@ const Header = () => {
               Home
             </Link>
             <Link
-              to="/surveys"
+              to="/survey"
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50 dark:text-gray-200 dark:hover:bg-gray-800"
             >
               Explore Surveys
             </Link>
 
-            {user ? (
+            {/* Personalized Mobile Links Condition: Wait for profile load */}
+            {profileIsLoaded ? (
               <>
                 <Link
                   to="/my-responses"
@@ -192,7 +213,7 @@ const Header = () => {
                   My Responses
                 </Link>
                 <Link
-                  to="/surveys/add"
+                  to="/survey/add"
                   className="block px-3 py-2 rounded-md text-base font-medium text-emerald-600 font-semibold hover:bg-gray-50 dark:text-emerald-400 dark:hover:bg-gray-800"
                 >
                   + Create Survey
@@ -201,10 +222,17 @@ const Header = () => {
                   onClick={onLogout}
                   className="w-full text-left block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50 dark:hover:bg-red-950/30"
                 >
-                  Log Out
+                  Log Out ({profile.username || profile.email})
                 </button>
               </>
+            ) : user && isLoading ? (
+                /* Personalized Mobile Links Condition: Profile fetching */
+                <div className="px-3 py-2 text-sm flex items-center space-x-2 text-gray-500 dark:text-gray-400">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-emerald-600"></div>
+                    <span>Loading Profile...</span>
+                </div>
             ) : (
+                /* Personalized Mobile Links Condition: Guest */
               <div className="pt-2 border-t border-gray-100 dark:border-gray-800 flex flex-col space-y-2">
                 <Link
                   to="/login"

@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, constr, EmailStr
 from backend.survey.schema import SurveyBase
@@ -26,7 +26,7 @@ class UserResponseList(BaseModel):
     survey_id: int
     survey: SurveyBase
     user_id: int
-    createdDate: date
+    createdDate: datetime
     response: str
 
     class Config:
