@@ -1,17 +1,21 @@
 from fastapi import HTTPException, status
 from typing import List, Optional
 
+from sqlalchemy.orm import Session
+
 from . import schema
 from . import models
 
 
-async def new_user_register(request: schema.BaseModel, database) -> models.User:
-    new_user = models.User(username=request.username, email=request.email,
-                           role=request.role, 
-                           password=request.password,
-                           firstName=request.firstName,
-                           lastName=request.lastName)
-    print(request)                       
+async def new_user_register(request: schema.User, database: Session) -> models.User:
+    new_user = models.User(
+        username=request.username,
+        email=request.email,
+        role=request.role, 
+        password=request.password,
+        firstName=request.firstName,
+        lastName=request.lastName
+    )                      
 
     database.add(new_user)
     database.commit()
@@ -19,12 +23,12 @@ async def new_user_register(request: schema.BaseModel, database) -> models.User:
     return new_user
 
 
-async def all_users(database) -> List[models.User]:
+async def all_users(database: Session) -> List[models.User]:
     users = database.query(models.User).all()
     return users
 
 
-async def get_user_by_id(user_id, database) -> Optional[models.User]:
+async def get_user_by_id(user_id: int, database: Session) -> Optional[models.User]:
     user_info = database.query(models.User).get(user_id)
 
     if not user_info:
@@ -36,7 +40,7 @@ async def get_user_by_id(user_id, database) -> Optional[models.User]:
     return user_info
 
 
-async def get_profile(database, current_user) -> models.User:
+async def get_profile(database: Session, current_user: schema.DisplayAccount) -> models.User:
     user = database.query(models.User).filter(models.User.email == current_user.email).first()
     return user
 
