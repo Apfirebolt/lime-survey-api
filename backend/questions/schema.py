@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
 from backend.options.schema import OptionList
@@ -25,7 +25,7 @@ class QuestionUpdate(BaseModel):
 class QuestionList(BaseModel):
     id: int
     questionText: str
-    createdDate: date
+    createdDate: datetime
 
     class Config:
         from_attributes = True

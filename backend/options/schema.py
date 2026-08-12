@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel
 
@@ -22,7 +22,7 @@ class OptionUpdate(BaseModel):
 class OptionList(BaseModel):
     id: int
     optionText: str
-    createdDate: date
+    createdDate: datetime
     question_id: int
 
     class Config:

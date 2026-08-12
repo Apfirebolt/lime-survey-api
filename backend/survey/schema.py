@@ -1,6 +1,6 @@
-from datetime import date
+from datetime import datetime
 from typing import Optional, List
-from pydantic import BaseModel, constr, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr
 from backend.questions.schema import QuestionBase
 
 
@@ -8,26 +8,23 @@ class UserSchema(BaseModel):
     username: str
     email: EmailStr
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SurveyBase(BaseModel):
-    id: Optional[int]
+    id: Optional[int] = None
     title: str
     description: str
-    questions: Optional[List[QuestionBase]]
+    questions: Optional[List[QuestionBase]] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SurveyUpdate(BaseModel):
-    title: Optional[str]
-    description: Optional[str]
+    title: Optional[str] = None
+    description: Optional[str] = None
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class SurveyList(BaseModel):
@@ -35,9 +32,8 @@ class SurveyList(BaseModel):
     title: str
     description: str
     user_id: int
-    createdDate: date
+    createdDate: datetime
     questions: List[QuestionBase]
     owner: UserSchema
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
